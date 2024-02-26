@@ -548,6 +548,7 @@ class LineItems {
   List<MetaData>? metaData;
   String? sku;
   String? price;
+  String? image; 
 
   LineItems(
       {this.id,
@@ -563,7 +564,9 @@ class LineItems {
       this.taxes,
       this.metaData,
       this.sku,
-      this.price});
+      this.price,
+      this.image,
+      });
 
   LineItems.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -581,6 +584,7 @@ class LineItems {
         (json['meta_data'] as List).map((i) => MetaData.fromJson(i)).toList();
     sku = json['sku'];
     price = json['price'].toString();
+    image = json['image']['src'].toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -603,6 +607,7 @@ class LineItems {
     }
     data['sku'] = this.sku;
     data['price'] = this.price;
+    data['image']['src'] = this.image;
     return data;
   }
 
