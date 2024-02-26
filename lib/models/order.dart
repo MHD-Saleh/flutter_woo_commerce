@@ -548,7 +548,7 @@ class LineItems {
   List<MetaData>? metaData;
   String? sku;
   String? price;
-  String? image; 
+  Image? image; 
 
   LineItems(
       {this.id,
@@ -584,7 +584,7 @@ class LineItems {
         (json['meta_data'] as List).map((i) => MetaData.fromJson(i)).toList();
     sku = json['sku'];
     price = json['price'].toString();
-    image = json['image']['src'].toString();
+        image = json['image'] != null ? new Image.fromJson(json['image']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -607,7 +607,9 @@ class LineItems {
     }
     data['sku'] = this.sku;
     data['price'] = this.price;
-    data['image']['src'] = this.image;
+    if (this.image != null) {
+      data['image'] = this.image!.toJson();
+    }
     return data;
   }
 
@@ -793,6 +795,26 @@ class Collection {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['href'] = this.href;
+    return data;
+  }
+}
+
+
+class Image {
+  String? id;
+  String? src;
+
+  Image({this.id, this.src});
+
+  Image.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    src = json['src'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['src'] = this.src;
     return data;
   }
 }
