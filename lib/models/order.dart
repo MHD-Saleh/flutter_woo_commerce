@@ -287,7 +287,7 @@ class WooOrderCouponLine {
       : id = json['id'],
         code = json['code'],
         discount = json['discount'],
-        discountTax = json['discount_tax'],
+        discountTax = json['discount_tax'];
         // metaData = (json['meta_data'] as List)
         //     .map((i) => MetaData.fromJson(i))
         //     .toList();
@@ -326,7 +326,7 @@ class WooOrderFeeLine {
         total = json['total'],
         totalTax = json['total_tax'],
         taxes =
-            (json['taxes'] as List).map((i) => FeeLineTax.fromJson(i)).toList(),
+            (json['taxes'] as List).map((i) => FeeLineTax.fromJson(i)).toList();
         // metaData = (json['meta_data'] as List)
         //     .map((i) => MetaData.fromJson(i))
         //     .toList();
