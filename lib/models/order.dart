@@ -1,8 +1,7 @@
 /*
  * BSD 3-Clause License
 
-    Copyright (c) 2020, RAY OKAAH - MailTo: ray@flutterengineer.com, Twitter: Rayscode
-    All rights reserved.
+
 
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
@@ -66,7 +65,7 @@ class WooOrder {
   String? dateCompleted;
   String? dateCompletedGmt;
   String? cartHash;
-  List<MetaData>? metaData;
+  // List<MetaData>? metaData;
   List<LineItems>? lineItems;
   List<TaxLines>? taxLines;
   List<ShippingLines>? shippingLines;
@@ -110,7 +109,7 @@ class WooOrder {
       this.dateCompleted,
       this.dateCompletedGmt,
       this.cartHash,
-      this.metaData,
+      // this.metaData,
       this.lineItems,
       this.taxLines,
       this.shippingLines,
@@ -157,8 +156,8 @@ class WooOrder {
     dateCompleted = json['date_completed'];
     dateCompletedGmt = json['date_completed_gmt'];
     cartHash = json['cart_hash'];
-    metaData =
-        (json['meta_data'] as List).map((i) => MetaData.fromJson(i)).toList();
+    // metaData =
+    //     (json['meta_data'] as List).map((i) => MetaData.fromJson(i)).toList();
     if (json['line_items'] != null) {
       lineItems = <LineItems>[];
       json['line_items'].forEach((v) {
@@ -239,9 +238,9 @@ class WooOrder {
     data['date_completed'] = this.dateCompleted;
     data['date_completed_gmt'] = this.dateCompletedGmt;
     data['cart_hash'] = this.cartHash;
-    if (this.metaData != null) {
-      data['meta_data'] = this.metaData!.map((v) => v.toJson()).toList();
-    }
+    // if (this.metaData != null) {
+    //   data['meta_data'] = this.metaData!.map((v) => v.toJson()).toList();
+    // }
     if (this.lineItems != null) {
       data['line_items'] = this.lineItems!.map((v) => v.toJson()).toList();
     }
@@ -277,19 +276,21 @@ class WooOrderCouponLine {
   String? code;
   String? discount;
   String? discountTax;
-  List<MetaData> metaData;
+  // List<MetaData> metaData;
 
   WooOrderCouponLine(
-      this.id, this.code, this.discount, this.discountTax, this.metaData);
+      this.id, this.code, this.discount, this.discountTax,
+      // this.metaData,
+      );
 
   WooOrderCouponLine.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         code = json['code'],
         discount = json['discount'],
         discountTax = json['discount_tax'],
-        metaData = (json['meta_data'] as List)
-            .map((i) => MetaData.fromJson(i))
-            .toList();
+        // metaData = (json['meta_data'] as List)
+        //     .map((i) => MetaData.fromJson(i))
+        //     .toList();
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -297,7 +298,7 @@ class WooOrderCouponLine {
     data['code'] = this.code;
     data['discount'] = this.discount;
     data['discount_tax'] = this.discountTax;
-    data['meta_data'] = this.metaData.map((v) => v.toJson()).toList();
+    // data['meta_data'] = this.metaData.map((v) => v.toJson()).toList();
     return data;
   }
 }
@@ -310,10 +311,12 @@ class WooOrderFeeLine {
   String? total;
   String? totalTax;
   List<FeeLineTax> taxes;
-  List<MetaData> metaData;
+  // List<MetaData> metaData;
 
   WooOrderFeeLine(this.id, this.name, this.taxClass, this.taxStatus,
-      this.totalTax, this.taxes, this.metaData);
+      this.totalTax, this.taxes,
+      // this.metaData,
+      );
 
   WooOrderFeeLine.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -324,9 +327,9 @@ class WooOrderFeeLine {
         totalTax = json['total_tax'],
         taxes =
             (json['taxes'] as List).map((i) => FeeLineTax.fromJson(i)).toList(),
-        metaData = (json['meta_data'] as List)
-            .map((i) => MetaData.fromJson(i))
-            .toList();
+        // metaData = (json['meta_data'] as List)
+        //     .map((i) => MetaData.fromJson(i))
+        //     .toList();
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -337,7 +340,7 @@ class WooOrderFeeLine {
     data['total'] = this.total;
     data['total_tax'] = this.totalTax;
     data['taxes'] = this.taxes;
-    data['meta_data'] = this.metaData.map((v) => v.toJson()).toList();
+    // data['meta_data'] = this.metaData.map((v) => v.toJson()).toList();
     return data;
   }
 }
@@ -350,10 +353,12 @@ class FeeLineTax {
   bool? compound;
   String? taxTotal;
   String? shippingTaxTotal;
-  List<MetaData>? metaData;
+  // List<MetaData>? metaData;
 
   FeeLineTax(this.id, this.rateCode, this.rateId, this.label, this.compound,
-      this.taxTotal, this.shippingTaxTotal, this.metaData);
+      this.taxTotal, this.shippingTaxTotal,
+      // this.metaData,
+      );
 
   FeeLineTax.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -363,10 +368,10 @@ class FeeLineTax {
     compound = json['compound'];
     taxTotal = json['tax_total'];
     shippingTaxTotal = json['shipping_tax_total'];
-    if (json['meta_data'] != null) {
-      metaData =
-          (json['meta_data'] as List).map((i) => MetaData.fromJson(i)).toList();
-    }
+    // if (json['meta_data'] != null) {
+    //   metaData =
+    //       (json['meta_data'] as List).map((i) => MetaData.fromJson(i)).toList();
+    // }
   }
 
   Map<String, dynamic> toJson() {
@@ -378,7 +383,7 @@ class FeeLineTax {
     data['compound'] = this.compound;
     data['tax_total'] = this.taxTotal;
     data['shipping_tax_total'] = this.shippingTaxTotal;
-    data['meta_data'] = this.metaData;
+    // data['meta_data'] = this.metaData;
     return data;
   }
 }
@@ -489,27 +494,27 @@ class Shipping {
   }
 }
 
-class MetaData {
-  int? id;
-  String? key;
-  String? value;
-
-  MetaData({this.id, this.key, this.value});
-
-  MetaData.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    key = json['key'];
-    value = json['value'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['key'] = this.key;
-    data['value'] = this.value;
-    return data;
-  }
-}
+// class MetaData {
+//   int? id;
+//   String? key;
+//   String? value;
+//
+//   MetaData({this.id, this.key, this.value});
+//
+//   MetaData.fromJson(Map<String, dynamic> json) {
+//     id = json['id'];
+//     key = json['key'];
+//     value = json['value'];
+//   }
+//
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = new Map<String, dynamic>();
+//     data['id'] = this.id;
+//     data['key'] = this.key;
+//     data['value'] = this.value;
+//     return data;
+//   }
+// }
 
 class Refunds {
   int? id;
@@ -545,7 +550,7 @@ class LineItems {
   String? total;
   String? totalTax;
   List<Taxes>? taxes;
-  List<MetaData>? metaData;
+  // List<MetaData>? metaData;
   String? sku;
   String? price;
   Image? image; 
@@ -562,7 +567,7 @@ class LineItems {
       this.total,
       this.totalTax,
       this.taxes,
-      this.metaData,
+      // this.metaData,
       this.sku,
       this.price,
       this.image,
@@ -580,8 +585,8 @@ class LineItems {
     total = json['total'];
     totalTax = json['total_tax'];
     taxes = (json['taxes'] as List).map((i) => Taxes.fromJson(i)).toList();
-    metaData =
-        (json['meta_data'] as List).map((i) => MetaData.fromJson(i)).toList();
+    // metaData =
+    //     (json['meta_data'] as List).map((i) => MetaData.fromJson(i)).toList();
     sku = json['sku'];
     price = json['price'].toString();
         image = json['image'] != null ? new Image.fromJson(json['image']) : null;
@@ -602,9 +607,9 @@ class LineItems {
     if (this.taxes != null) {
       data['taxes'] = this.taxes!.map((v) => v.toJson()).toList();
     }
-    if (this.metaData != null) {
-      data['meta_data'] = this.metaData!.map((v) => v.toJson()).toList();
-    }
+    // if (this.metaData != null) {
+    //   data['meta_data'] = this.metaData!.map((v) => v.toJson()).toList();
+    // }
     data['sku'] = this.sku;
     data['price'] = this.price;
     if (this.image != null) {
@@ -647,7 +652,7 @@ class TaxLines {
   bool? compound;
   String? taxTotal;
   String? shippingTaxTotal;
-  List<MetaData>? metaData;
+  // List<MetaData>? metaData;
 
   TaxLines(
       {this.id,
@@ -657,7 +662,8 @@ class TaxLines {
       this.compound,
       this.taxTotal,
       this.shippingTaxTotal,
-      this.metaData});
+      // this.metaData,
+      });
 
   TaxLines.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -667,8 +673,8 @@ class TaxLines {
     compound = json['compound'];
     taxTotal = json['tax_total'];
     shippingTaxTotal = json['shipping_tax_total'];
-    metaData =
-        (json['meta_data'] as List).map((i) => MetaData.fromJson(i)).toList();
+    // metaData =
+    //     (json['meta_data'] as List).map((i) => MetaData.fromJson(i)).toList();
   }
 
   Map<String, dynamic> toJson() {
@@ -680,9 +686,9 @@ class TaxLines {
     data['compound'] = this.compound;
     data['tax_total'] = this.taxTotal;
     data['shipping_tax_total'] = this.shippingTaxTotal;
-    if (this.metaData != null) {
-      data['meta_data'] = this.metaData!.map((v) => v.toJson()).toList();
-    }
+    // if (this.metaData != null) {
+    //   data['meta_data'] = this.metaData!.map((v) => v.toJson()).toList();
+    // }
     return data;
   }
 }
@@ -694,7 +700,7 @@ class ShippingLines {
   String? total;
   String? totalTax;
   List<Taxes>? taxes;
-  List<MetaData>? metaData;
+  // List<MetaData>? metaData;
 
   ShippingLines(
       {this.id,
@@ -703,7 +709,8 @@ class ShippingLines {
       this.total,
       this.totalTax,
       this.taxes,
-      this.metaData});
+      // this.metaData,
+      });
 
   ShippingLines.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -713,8 +720,8 @@ class ShippingLines {
     totalTax = json['total_tax'];
 
     taxes = (json['taxes'] as List).map((i) => Taxes.fromJson(i)).toList();
-    metaData =
-        (json['meta_data'] as List).map((i) => MetaData.fromJson(i)).toList();
+    // metaData =
+    //     (json['meta_data'] as List).map((i) => MetaData.fromJson(i)).toList();
   }
 
   Map<String, dynamic> toJson() {
@@ -727,9 +734,9 @@ class ShippingLines {
     if (this.taxes != null) {
       data['taxes'] = this.taxes!.map((v) => v.toJson()).toList();
     }
-    if (this.metaData != null) {
-      data['meta_data'] = this.metaData!.map((v) => v.toJson()).toList();
-    }
+    // if (this.metaData != null) {
+    //   data['meta_data'] = this.metaData!.map((v) => v.toJson()).toList();
+    // }
     return data;
   }
 }
