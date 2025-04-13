@@ -1190,6 +1190,10 @@ class WooCommerce {
     _setApiResourceUrl(
       path: 'orders',
     );
+      
+    print(queryUri.toString());
+    print(jsonEncode(orderPayload.toJson()));
+
     final response = await post(queryUri.toString(), orderPayload.toJson());
     return WooOrder.fromJson(response);
   }
