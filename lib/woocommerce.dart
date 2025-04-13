@@ -41,6 +41,7 @@ import 'dart:io';
 import "dart:math";
 import "dart:core";
 import 'package:crypto/crypto.dart' as crypto;
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:woocommerce/models/customer_download.dart';
 import 'package:woocommerce/models/payment_gateway.dart';
@@ -1185,18 +1186,51 @@ class WooCommerce {
   /// Creates an order and returns the [WooOrder] object.
   ///
   /// Related endpoint: https://woocommerce.github.io/woocommerce-rest-api-docs/#orders.
-  Future<WooOrder> createOrder(WooOrderPayload orderPayload) async {
-    _printToLog('Creating Order With Payload : ' + orderPayload.toString());
-    _setApiResourceUrl(
-      path: 'orders',
-    );
-      
-    print(queryUri.toString());
-    print(jsonEncode(orderPayload.toJson()));
+  ///
 
-    final response = await post(queryUri.toString(), orderPayload.toJson());
-    return WooOrder.fromJson(response);
+  Future<WooOrder> createOrder(WooOrderPayload orderPayload) async {
+    try {
+      // 1. Log the order payload before sending
+      debugPrint('Creating order with payload:');
+      debugPrint(orderPayload.toString());
+      debugPrint('JSON encoded payload: ${jsonEncode(orderPayload.toJson())}');
+
+      // 2. Set up API endpoint
+      _setApiResourceUrl(path: 'orders');
+      debugPrint('API Endpoint: ${queryUri.toString()}');
+
+      // 3. Make the POST request
+      final response = await post(queryUri.toString(), orderPayload.toJson());
+
+      // 4. Log successful response
+      debugPrint('Order created successfully:');
+      debugPrint(response.toString());
+
+      // 5. Convert and return the WooOrder
+      return WooOrder.fromJson(response);
+    } catch (e, stackTrace) {
+      // Enhanced error handling
+      debugPrint('Error creating order: $e');
+      debugPrint('Stack trace: $stackTrace');
+
+      // Re-throw with more context
+      throw Exception('Failed to create order: ${e.toString()}');
+    }
   }
+
+  // Future<WooOrder> createOrder(WooOrderPayload orderPayload) async {
+  //   _printToLog('Creating Order With Payload : ' + orderPayload.toString());
+  //   _setApiResourceUrl(
+  //     path: 'orders',
+  //   );
+  //
+  //   _printToLog('queryUri');
+  //   _printToLog(queryUri.toString());
+  //   _printToLog(jsonEncode(orderPayload.toJson()));
+  //
+  //   final response = await post(queryUri.toString(), orderPayload.toJson());
+  //   return WooOrder.fromJson(response);
+  // }
 
   /// Returns a list of all [Order], with filter options.
   ///
@@ -1761,7 +1795,7 @@ class WooCommerce {
   }
 
   String getQueryString(Map params,
-      {String prefix: '&', bool inRecursion: false}) {
+      {String prefix = '&', bool inRecursion = false}) {
     String query = '';
 
     params.forEach((key, value) {
@@ -1821,25 +1855,89 @@ class WooCommerce {
 
   /// Make a custom post request to Woocommerce, using WooCommerce SDK.
 
-  Future<dynamic> post(
-    String endPoint,
-    Map data,
-  ) async {
-    String url = this._getOAuthURL("POST", endPoint);
+  Future<dynamic> post(String endPoint, Map data) async {
+    try {
+      String url = this._getOAuthURL("POST", endPoint);
 
-    http.Client client = http.Client();
-    http.Request request = http.Request('POST', Uri.parse(url));
-    request.headers[HttpHeaders.contentTypeHeader] =
-        'application/json; charset=utf-8';
-    //request.headers[HttpHeaders.authorizationHeader] = _bearerToken;
-    request.headers[HttpHeaders.cacheControlHeader] = "no-cache";
-    request.body = json.encode(data);
-    String response =
-        await client.send(request).then((res) => res.stream.bytesToString());
-    var dataResponse = await json.decode(response);
-    _handleError(dataResponse);
-    return dataResponse;
+      // Debug logging
+      debugPrint('Making POST request to: $url');
+      debugPrint('Request payload: ${json.encode(data)}');
+
+      http.Client client = http.Client();
+      http.Request request = http.Request('POST', Uri.parse(url));
+
+      // Set headers
+      request.headers[HttpHeaders.contentTypeHeader] = 'application/json; charset=utf-8';
+      request.headers[HttpHeaders.acceptHeader] = 'application/json';
+      request.headers[HttpHeaders.cacheControlHeader] = "no-cache";
+
+      // Set body
+      request.body = json.encode(data);
+
+      // Send request and get response
+      final streamedResponse = await client.send(request);
+      final response = await http.Response.fromStream(streamedResponse);
+
+      // Debug logging
+      debugPrint('Response status: ${response.statusCode}');
+      debugPrint('Response body: ${response.body}');
+
+      // Check status code
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        try {
+          // Clean response if needed
+          final cleanedResponse = _cleanJsonResponse(response.body);
+          final dataResponse = json.decode(cleanedResponse);
+          _handleError(dataResponse);
+          return dataResponse;
+        } catch (e) {
+          debugPrint('JSON parsing error: $e');
+          debugPrint('Raw response body: ${response.body}');
+          throw FormatException('Failed to parse response: $e');
+        }
+      } else {
+        throw HttpException('Request failed with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      debugPrint('Error in post request: $e');
+      rethrow;
+    }
   }
+
+  String _cleanJsonResponse(String response) {
+    // Remove any characters before the first {
+    final startIndex = response.indexOf('{');
+    if (startIndex > 0) {
+      response = response.substring(startIndex);
+    }
+    // Remove any characters after the last }
+    final endIndex = response.lastIndexOf('}');
+    if (endIndex < response.length - 1) {
+      response = response.substring(0, endIndex + 1);
+    }
+    return response;
+  }
+
+  // Future<dynamic> post(
+  //   String endPoint,
+  //   Map data,
+  // )
+  // async {
+  //   String url = this._getOAuthURL("POST", endPoint);
+  //
+  //   http.Client client = http.Client();
+  //   http.Request request = http.Request('POST', Uri.parse(url));
+  //   request.headers[HttpHeaders.contentTypeHeader] =
+  //       'application/json; charset=utf-8';
+  //   //request.headers[HttpHeaders.authorizationHeader] = _bearerToken;
+  //   request.headers[HttpHeaders.cacheControlHeader] = "no-cache";
+  //   request.body = json.encode(data);
+  //   String response =
+  //       await client.send(request).then((res) => res.stream.bytesToString());
+  //   var dataResponse = await json.decode(response);
+  //   _handleError(dataResponse);
+  //   return dataResponse;
+  // }
 
   /// Make a custom put request to Woocommerce, using WooCommerce SDK.
 
